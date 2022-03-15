@@ -42,7 +42,7 @@ namespace myk::lib {
     // 要素は初期化しない
     //Matrix::Matrix(UINT row, UINT cul) : Matrix(row, cul, 0.0F) {}
     Matrix::Matrix(UINT row, UINT cul) :
-        ROW{ row }, CUL{ cul }, _matrix(row, std::vector<double>(cul))
+        ROW{ row }, CUL{ cul }, _matrix(std::vector<double>(row*cul))
     {
         //std::cout << "_matrix.at(0).size() = "  << _matrix[0].size() << std::endl;
     }
@@ -50,32 +50,44 @@ namespace myk::lib {
     // コンストラクタ
     Matrix::Matrix(UINT row, UINT cul, double value) :
         ROW{ row }, CUL{ cul },
-        _matrix(row, std::vector<double>(cul, value)) { }
+        _matrix(std::vector<double>(cul * cul, value)) { }
 
-    // vectorをムーブして初期化するコンストラクタ
-    Matrix::Matrix(const std::vector<std::vector<double>>&& _matrix) :
-        _matrix{ _matrix }, ROW{ static_cast<UINT>(_matrix.size())}, CUL{static_cast<UINT>(_matrix.at(0).size())} {
+    // 二次元ジャグ配列vectorをムーブして初期化するコンストラクタ
+    Matrix::Matrix(const std::vector<std::vector<double>>&& matrix) :
+         ROW{ static_cast<UINT>(matrix.size()) }, CUL{ static_cast<UINT>(matrix.at(0).size()) },
+        _matrix(matrix.at(0).size()* matrix.size()) {
+        to1DimensionalArray(matrix);
+    }
+
+    // 一次元vectorをムーブして初期化するコンストラクタ
+    Matrix::Matrix(const UINT row, const UINT cul, const std::vector<double>&& matrix) :
+        _matrix{ matrix }, ROW{ static_cast<UINT>(row)}, CUL{static_cast<UINT>(cul)} {
         // 妥協の産物...ジャグ配列を禁止にしたい
         // テンプレートを使わずに二次元目の要素数を固定する方法
-        checkMatrixCULSize();
+        //checkMatrixCULSize();
     }
 
-    // vectorを参照して初期化するコンストラクタ
-    Matrix::Matrix(const std::vector<std::vector<double>>& _matrix) :
-        _matrix{ _matrix }, ROW{ static_cast<UINT>(_matrix.size())}, CUL{static_cast<UINT>(_matrix.at(0).size())} {
-        checkMatrixCULSize();
+    // 二次元vectorを参照して初期化するコンストラクタ
+    Matrix::Matrix(const std::vector<std::vector<double>>& matrix) :
+        ROW{static_cast<UINT>(matrix.size())}, CUL{static_cast<UINT>(matrix.at(0).size())},
+        _matrix(matrix.at(0).size()* matrix.size()) {
+        to1DimensionalArray(matrix);
     }
 
-    // vectorをムーブして初期化するコンストラクタ(ジャグ配列チェックしない場合はtrue)
-    Matrix::Matrix(const std::vector<std::vector<double>>&& _matrix, bool unCheckJaddedArray) :
-        _matrix{ _matrix }, ROW{ static_cast<UINT>(_matrix.size())}, CUL{static_cast<UINT>(_matrix.at(0).size())} {
-        if (!unCheckJaddedArray) checkMatrixCULSize();
+    // 二次元vectorをムーブして初期化するコンストラクタ
+    Matrix::Matrix(const std::vector<std::vector<double>>&& matrix, bool unCheckJaddedArray) :
+        ROW{ static_cast<UINT>(matrix.size())}, CUL{static_cast<UINT>(matrix.at(0).size())}, 
+        _matrix(matrix.at(0).size()* matrix.size()) {
+        to1DimensionalArray(matrix);
+        //if (!unCheckJaddedArray) checkMatrixCULSize();
     }
 
-    // vectorを参照して初期化するコンストラクタ(ジャグ配列チェックをしない場合はtrue)
-    Matrix::Matrix(const std::vector<std::vector<double>>& _matrix, bool unCheckJaddedArray) :
-        _matrix{ _matrix }, ROW{ static_cast<UINT>(_matrix.size())}, CUL{ static_cast<UINT>(_matrix.at(0).size()) } {
-        if (!unCheckJaddedArray) checkMatrixCULSize();
+    // 二次元vectorを参照して初期化するコンストラクタ
+    Matrix::Matrix(const std::vector<std::vector<double>>& matrix, bool unCheckJaddedArray) :
+        ROW{ static_cast<UINT>(matrix.size()) }, CUL{ static_cast<UINT>(matrix.at(0).size()) }, 
+        _matrix(matrix.at(0).size()* matrix.size()) {
+        to1DimensionalArray(matrix);
+        //if (!unCheckJaddedArray) checkMatrixCULSize();
     }
 
     // ムーブコンストラクタ
@@ -84,13 +96,13 @@ namespace myk::lib {
 
     // 行と列を指定してその要素の参照を取得（変更可）
     inline double& Matrix::at(UINT row, UINT cul) noexcept(false) {
-        return _matrix.at(row).at(cul);
+        return _matrix.at(row * CUL + cul);
     }
 
     // 行と列を指定してその要素の値を取得（変更不可）
     inline double Matrix::read(UINT row, UINT cul) const noexcept(false) {
         try {
-            return _matrix.at(row).at(cul);
+            return _matrix.at(row * CUL + cul);
         } catch (std::out_of_range& e) {
             std::cerr << "Matrix::read で例外が発生しました:" << e.what() << std::endl;
             return 0;
@@ -116,11 +128,11 @@ namespace myk::lib {
             << "列数: " << CUL << "\n"
             << "――――――――――――\n";
         sst << hazime << "\n";
-        for (std::vector<double> vec : _matrix) {
+        for (auto j = 0; j < ROW; ++j) {
             sst << "\t" << hazime << margin;
-            for (size_t i = 0; i < vec.size(); ++i) {
-                sst << vec.at(i);
-                if (i != (vec.size() - 1)) sst << ", ";
+            for (size_t i = 0; i < CUL; ++i) {
+                sst << _matrix.at(j*CUL + i);
+                if (i != (CUL - 1)) sst << ", ";
             }
             sst << margin << owari << "\n";
         }
@@ -130,9 +142,10 @@ namespace myk::lib {
         return result;
     }
 
+    // 使われない
     bool Matrix::checkMatrixCULSize() noexcept(false) {
-        for (size_t i = 0; i < _matrix.size(); ++i) {
-            if (_matrix.at(i).size() != CUL) {
+        for (size_t i = 0; i < ROW; ++i) {
+            if (CUL != CUL) {
                 throw "Matrixの列サイズが一致していません。";
                 return false;
             }
