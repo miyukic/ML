@@ -36,12 +36,25 @@ namespace myk {
 #endif
 
     namespace lib {
-
-        class MLLIB_API Matrix {
+ class MLLIB_API Matrix {
             std::vector<double> _matrix;
         public:
             UINT ROW = 1;
             UINT CUL = 1;
+
+            /// <summary>
+            /// 一次元配列を参照して初期化するコンストラクタ
+            /// </summary>
+            /// <param name="matrix"></param>
+            Matrix(const UINT row, const UINT cul, const std::vector<double>& matrix);
+
+            /// <summary>
+            /// 一次元vectorをムーブして初期化するコンストラクタ。
+            /// </summary>
+            /// <param name="row"></param>
+            /// <param name="cul"></param>
+            /// <param name="matrix"></param>
+            Matrix(const UINT row, const UINT cul, const std::vector<double>&& matrix);
 
             /// <summary>
             /// 行と列を指定して行列オブジェクトを生成します。
@@ -76,24 +89,17 @@ namespace myk {
             /// <summary>
             /// 二次元vectorをムーブして初期化するコンストラクタ。
             /// </summary>
-            /// <param name="_matrix"></param>
-            /// <param name="unCheckJaddedArray">使用しない</param>
-            Matrix(const std::vector<std::vector<double>>&& _matrix, bool unCheckJaddedArray);
-
-            /// <summary>
-            /// 一次元vectorをムーブして初期化するコンストラクタ。
-            /// </summary>
-            /// <param name="row"></param>
-            /// <param name="cul"></param>
             /// <param name="matrix"></param>
-            Matrix(const UINT row, const UINT cul, const std::vector<double>&& matrix);
+            /// <param name="unCheckJaddedArray">使用しない</param>
+            Matrix(const std::vector<std::vector<double>>&& matrix, bool unCheckJaddedArray);
 
             /// <summary>
             /// 二次元vectorを参照して初期化するコンストラクタ。
             /// </summary>
-            /// <param name="_matrix"></param>
+            /// <param name="matrix"></param>
             /// <param name="unCheckJaddedArray">使用しない</param>
-            Matrix(const std::vector<std::vector<double>>& _matrix, bool unCheckJaddedArray);
+            Matrix(const std::vector<std::vector<double>>& matrix, bool unCheckJaddedArray);
+
 
             /// <summary>
             /// Matrixのムーブコンストラクタ

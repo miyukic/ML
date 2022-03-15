@@ -38,6 +38,19 @@
 #pragma region cpp 
 namespace myk::lib {
 #pragma region Matrixクラスの実装
+
+    // 一次元配列を参照して初期化するコンストラクタ
+    Matrix::Matrix(const UINT row, const UINT cul, const std::vector<double>& matrix) :
+        ROW{ static_cast<UINT>(row) }, CUL{ static_cast<UINT>(cul) }, _matrix{ matrix } { }
+
+    // 一次元vectorをムーブして初期化するコンストラクタ
+    Matrix::Matrix(const UINT row, const UINT cul, const std::vector<double>&& matrix) :
+        _matrix{ matrix }, ROW{ static_cast<UINT>(row) }, CUL{ static_cast<UINT>(cul) } {
+        // 妥協の産物...ジャグ配列を禁止にしたい
+        // テンプレートを使わずに二次元目の要素数を固定する方法
+        //checkMatrixCULSize();
+    }
+
     // コンストラクタ
     // 要素は初期化しない
     //Matrix::Matrix(UINT row, UINT cul) : Matrix(row, cul, 0.0F) {}
@@ -59,13 +72,6 @@ namespace myk::lib {
         to1DimensionalArray(matrix);
     }
 
-    // 一次元vectorをムーブして初期化するコンストラクタ
-    Matrix::Matrix(const UINT row, const UINT cul, const std::vector<double>&& matrix) :
-        _matrix{ matrix }, ROW{ static_cast<UINT>(row)}, CUL{static_cast<UINT>(cul)} {
-        // 妥協の産物...ジャグ配列を禁止にしたい
-        // テンプレートを使わずに二次元目の要素数を固定する方法
-        //checkMatrixCULSize();
-    }
 
     // 二次元vectorを参照して初期化するコンストラクタ
     Matrix::Matrix(const std::vector<std::vector<double>>& matrix) :
@@ -523,9 +529,10 @@ void dbgMain(void) {
     //CMatrix cmtx2 = new(new double[,]{ { 2 }, { 2 }, { 2 } });
 
     chrono::system_clock::time_point start, end;
-    double times = 0;
+    double allTime = 0;
     Matrix mt = Matrix(0, 0);
-    for (auto count = 0; count < 10; ++count) {
+    auto times = 10;
+    for (auto count = 0; count < times; ++count) {
         mt = multiply(cmtx, cmtx);
         start = chrono::system_clock::now();
         for (auto i = 0; i < 3; i++) {
@@ -533,10 +540,10 @@ void dbgMain(void) {
         }
         end = chrono::system_clock::now();
         auto t = static_cast<double>(chrono::duration_cast<chrono::microseconds>(end - start).count() / 1000.0);
-        times += t;
+        allTime += t;
         std::cout << count << "回目 秒数: " << t << "ms" << std::endl;
     }
-    double time = times / 10;
+    double time = allTime / times;
     std::cout << " Matrix:" << time << " ms" << std::endl;
 }
 #pragma endregion //テスト関数
