@@ -36,12 +36,25 @@ namespace myk {
 #endif
 
     namespace lib {
-
-        class MLLIB_API Matrix {
-            std::vector<std::vector<double>> _matrix;
+ class MLLIB_API Matrix {
+            std::vector<double> _matrix;
         public:
             UINT ROW = 1;
             UINT CUL = 1;
+
+            /// <summary>
+            /// 一次元配列を参照して初期化するコンストラクタ
+            /// </summary>
+            /// <param name="matrix"></param>
+            Matrix(const UINT row, const UINT cul, const std::vector<double>& matrix);
+
+            /// <summary>
+            /// 一次元vectorをムーブして初期化するコンストラクタ。
+            /// </summary>
+            /// <param name="row"></param>
+            /// <param name="cul"></param>
+            /// <param name="matrix"></param>
+            Matrix(const UINT row, const UINT cul, const std::vector<double>&& matrix);
 
             /// <summary>
             /// 行と列を指定して行列オブジェクトを生成します。
@@ -62,30 +75,31 @@ namespace myk {
             Matrix(UINT row, UINT cul, double value);
 
             /// <summary>
-            /// vectorオブジェクトをムーブしてMatrixオブジェクトを生成します。
+            /// 二次元vectorオブジェクトをムーブしてMatrixオブジェクトを生成します。
             /// Matrixのコンストラクタ。
             /// </summary>
             Matrix(const std::vector<std::vector<double>>&& mtrix);
 
             /// <summary>
-            /// vectorオブジェクトを参照してMatrixオブジェクトを生成します。
+            /// 二次元vectorオブジェクトを参照してMatrixオブジェクトを生成します。
             /// Matrixのコンストラクタ。
             /// </summary>
             Matrix(const std::vector<std::vector<double>>& mtrix);
 
             /// <summary>
-            /// vectorをムーブして初期化するコンストラクタ。
+            /// 二次元vectorをムーブして初期化するコンストラクタ。
             /// </summary>
-            /// <param name="_matrix"></param>
-            /// <param name="unCheckJaddedArray">ジャグ配列チェックをしない場合は true </param>
-            Matrix(const std::vector<std::vector<double>>&& _matrix, bool unCheckJaddedArray);
+            /// <param name="matrix"></param>
+            /// <param name="unCheckJaddedArray">使用しない</param>
+            Matrix(const std::vector<std::vector<double>>&& matrix, bool unCheckJaddedArray);
 
             /// <summary>
-            /// vectorを参照して初期化するコンストラクタ。
+            /// 二次元vectorを参照して初期化するコンストラクタ。
             /// </summary>
-            /// <param name="_matrix"></param>
-            /// <param name="unCheckJaddedArray">ジャグ配列チェックをしない</param>
-            Matrix(const std::vector<std::vector<double>>& _matrix, bool unCheckJaddedArray);
+            /// <param name="matrix"></param>
+            /// <param name="unCheckJaddedArray">使用しない</param>
+            Matrix(const std::vector<std::vector<double>>& matrix, bool unCheckJaddedArray);
+
 
             /// <summary>
             /// Matrixのムーブコンストラクタ
@@ -122,8 +136,25 @@ namespace myk {
             /// </summary>
             Matrix& operator=(Matrix&&);
 
+            /// <summary>
+            /// 行列積（副作用あり）
+            /// 正方行列同士のみ
+            /// </summary>
+            /// <param name="other"></param>
+            /// <returns></returns>
+            Matrix& multiply(const Matrix& other) noexcept(false);
+
             UINT test();
         private:
+
+            void to1DimensionalArray(const std::vector<std::vector<double>>& matrix) {
+                for (auto i = 0; i < ROW; ++i) {
+                    auto temp = matrix.at(i);
+                    for (auto j = 0; j < CUL; ++j) {
+                        _matrix.at(i * CUL + j) = temp.at(j);
+                    }
+                }
+            }
 
             bool checkMatrixCULSize() noexcept(false);
         };
