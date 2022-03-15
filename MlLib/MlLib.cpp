@@ -168,6 +168,25 @@ namespace myk::lib {
         return *this;
     }
 
+    // おなじ正方行列同士の場合
+    Matrix& Matrix::multiply(const Matrix& other) {
+        using namespace std::literals::string_literals;
+        auto oROW = other.ROW;
+        auto oCUL = other.CUL;
+        if (ROW != CUL || (oROW != ROW) || (oCUL != CUL)) {
+            throw "計算できない行列です。"s + "\n"s + __FILE__ + " " + std::to_string(__LINE__) + " 行目の例外です。";
+            return *this;
+        }
+        for (size_t r = 0; r < ROW; ++r) {
+            for (size_t c = 0; c < oCUL; ++c) {
+                for (size_t k = 0; k < CUL; ++k) {
+                    at(r, c) += read(r, k) * other.read(k, c);
+                }
+            }
+        }
+        return *this;
+    }
+
     UINT Matrix::test() {
         return 321 * 42 + 12 * 3;
     }
@@ -530,13 +549,12 @@ void dbgMain(void) {
 
     chrono::system_clock::time_point start, end;
     double allTime = 0;
-    Matrix mt = Matrix(0, 0);
     auto times = 10;
     for (auto count = 0; count < times; ++count) {
-        mt = multiply(cmtx, cmtx);
+        cmtx.multiply(cmtx);
         start = chrono::system_clock::now();
         for (auto i = 0; i < 3; i++) {
-            mt = multiply(mt, cmtx);
+            cmtx.multiply(cmtx);
         }
         end = chrono::system_clock::now();
         auto t = static_cast<double>(chrono::duration_cast<chrono::microseconds>(end - start).count() / 1000.0);

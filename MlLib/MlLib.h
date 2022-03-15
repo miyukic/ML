@@ -136,6 +136,14 @@ namespace myk {
             /// </summary>
             Matrix& operator=(Matrix&&);
 
+            /// <summary>
+            /// 行列積（副作用あり）
+            /// 正方行列同士のみ
+            /// </summary>
+            /// <param name="other"></param>
+            /// <returns></returns>
+            Matrix& multiply(const Matrix& other) noexcept(false);
+
             UINT test();
         private:
 
