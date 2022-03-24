@@ -197,20 +197,21 @@ namespace myk::lib {
     // 行列積
     inline Matrix multiply(const Matrix& lhs, const Matrix& rhs) noexcept(false) {
         using namespace std::literals::string_literals;
-        auto lCUL = lhs.CUL;
-        auto rROW = rhs.ROW;
+        int lCUL = static_cast<UINT>(lhs.CUL);
+        int rROW = static_cast<UINT>(rhs.ROW);
         if (lCUL != rROW) {
             throw "計算できない行列です。\n左辺の行と右辺の列が一致している必要があります。\n"s
                 + "左辺 Matrix row = "s + std::to_string(lhs.ROW) + "cul = "s + std::to_string(lCUL)
                 + "右辺 Matrix row = "s + std::to_string(rROW) + "cul = "s + std::to_string(rhs.CUL);
         }
-        auto rCUL = rhs.CUL;
-        auto lROW = lhs.ROW;
+        int rCUL = static_cast<UINT>(rhs.CUL);
+        int lROW = static_cast<UINT>(lhs.ROW);
         Matrix newMatr(lROW, rCUL);
-        for (size_t r = 0; r < lROW; ++r) {
-            for (size_t c = 0; c < rCUL; ++c) {
-                for (size_t k = 0; k < lCUL; ++k) {
-                    newMatr.at(r, c) += lhs.read(r, k) * rhs.read(k, c);
+#pragma omp parallel for
+        for (int r = 0; r < lROW; ++r) {
+            for (int c = 0; c < rCUL; ++c) {
+                for (int k = 0; k < lCUL; ++k) {
+                    newMatr.at(static_cast<UINT>(r), static_cast<UINT>(c)) += lhs.read(static_cast<UINT>(r), static_cast<UINT>(k)) * rhs.read(k, c);
                 }
             }
         }
@@ -534,7 +535,7 @@ void dbgMain(void) {
     std::mt19937 engine{ seed_gen() };
     std::uniform_real_distribution<> dist{0, 50};
 
-    const int32_t size = 300;
+    const int32_t size = 500;
     std::vector<std::vector<double>> array;
     for (int32_t i = 0; i < size; ++i) {
         array.emplace_back(std::vector<double>());
@@ -549,11 +550,11 @@ void dbgMain(void) {
 
     chrono::system_clock::time_point start, end;
     double allTime = 0;
-    auto times = 10;
+    auto times = 5;
     for (auto count = 0; count < times; ++count) {
         cmtx.multiply(cmtx);
         start = chrono::system_clock::now();
-        for (auto i = 0; i < 3; i++) {
+        for (auto i = 0; i < 1; i++) {
             cmtx.multiply(cmtx);
         }
         end = chrono::system_clock::now();

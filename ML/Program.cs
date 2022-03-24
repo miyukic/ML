@@ -758,7 +758,7 @@ namespace Myk {
             NativeMethod.dbgMain();
 
             var random = new System.Random();
-            int size = 300;
+            int size = 500;
             double[,] oa = new double[size, size];
             for (int i = 0; i < size; ++i) {
                 for (int j = 0; j < size; ++j) {
@@ -771,20 +771,21 @@ namespace Myk {
             //CMatrix cmtx2 = new(new double[,]{ { 2 }, { 2 }, { 2 } });
 
             var sw = System.Diagnostics.Stopwatch.StartNew();
-            double times = 0;
+            double AllTimes = 0;
+            int times = 5;
             Matrix? mt = null;
-            for (int count = 0; count < 10; ++count) {
+            for (int count = 0; count < times; ++count) {
                 mt = cmtx * cmtx;
                 sw.Start();
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < 1; i++) {
                     mt = mt * cmtx;
                 }
                 sw.Stop();
-                times += sw.ElapsedMilliseconds;
+                AllTimes += sw.ElapsedMilliseconds;
                 Console.WriteLine(count + "回目 秒数: " + sw.ElapsedMilliseconds + "ms");
                 sw.Reset();
             }
-            double time = times / 10;
+            double time = AllTimes / times;
             Console.WriteLine(" Matrix:" + time + " ms");
 
             //cmtx * cmtx;
