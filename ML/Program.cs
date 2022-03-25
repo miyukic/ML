@@ -272,7 +272,7 @@ namespace Myk {
         /// </summary>
         public class Matrix : IMatrix {
 
-            private double[,] _matrix = new double[3,3];
+            private double[] _matrix = new double[9];
             public uint ROW { get; } = 1;
             public uint CUL { get; } = 1;
 
@@ -286,19 +286,19 @@ namespace Myk {
             public Matrix(uint row, uint cul, double value) {
                 this.ROW = row;
                 this.CUL = cul;
-                _matrix = new double[row, cul];
+                _matrix = new double[row*cul];
             }
 
 
             // 他次元配列を使って初期化
             public Matrix(double[,] matrix) {
-                this._matrix = matrix;
+                this._matrix = matrix.Cast<double>().ToArray();
                 ROW = (uint)matrix.GetLength(0);
                 CUL = (uint)matrix.GetLength(1);
             }
             //CMatrixからMatrixを生成するコンストラクタ
             internal Matrix(CMatrix cMatrix) {
-                this._matrix = new double[cMatrix.ROW, cMatrix.CUL];
+                this._matrix = new double[cMatrix.ROW * cMatrix.CUL];
                 this.ROW = cMatrix.ROW;
                 this.CUL = cMatrix.CUL;
                 NativeMethod.getMatrixData(cMatrix.id, this._matrix);
@@ -318,17 +318,17 @@ namespace Myk {
 
             // 行と列を指定してその要素の参照を取得（書き換え可）
             public ref double At(uint row, uint cul) {
-                return ref _matrix[row, cul];
+                return ref _matrix[row * this.CUL + cul];
             }
 
             // 行と列を指定してvalueで書き換えます
             public void At(uint row, uint cul, double value) {
-                _matrix[row, cul] = value;
+                _matrix[row * this.CUL + cul] = value;
             }
 
             // 行と列を指定してその要素の値を取得（変更不可）
             public double Read(uint row, uint cul) {
-                return _matrix[row, cul];
+                return _matrix[row * this.CUL + cul];
             }
 
             // Matrixの内容を出力する
@@ -349,7 +349,7 @@ namespace Myk {
                 for (int j = 0; j < ROW; ++j) {
                     sb.Append("\t").Append(HAZIME).Append(MARGIN);
                     for (int i = 0; i < CUL; ++i) {
-                        sb.Append(_matrix[j, i]);
+                        sb.Append(_matrix[j * CUL + i]);
                         if (i != (CUL - 1)) sb.Append(", ");
                     }
                     sb.Append(MARGIN).Append(OWARI).Append("\n");
@@ -474,7 +474,7 @@ namespace Myk {
                 public static extern void getMatrixData(ID id, double[,] parr);
 #elif WIN_64
                 [DllImport("MlLib64.dll")]
-                public static extern void getMatrixData(ID id, double[,] parr);
+                public static extern void getMatrixData(ID id, double[] parr);
 #endif
             }
 
