@@ -102,7 +102,7 @@ namespace myk::lib {
 
     // 行と列を指定してその要素の参照を取得（変更可）
     inline double& Matrix::at(UINT row, UINT cul) noexcept(false) {
-        return _matrix.at(row * CUL + cul);
+        return _matrix[row * CUL + cul];
     }
 
     // 行と列を指定してその要素の値を取得（変更不可）
@@ -115,7 +115,7 @@ namespace myk::lib {
             return 0;
         }
 #else
-        return _matrix.at(row * CUL + cul);
+        return _matrix[row * CUL + cul];
 #endif _DEBUG
     }
 
@@ -234,15 +234,14 @@ namespace myk::lib {
         }
         auto rCUL = rhs.CUL;
         auto lROW = lhs.ROW;
-        Matrix newMatr(lROW, rCUL);
+        result = Matrix(lROW, rCUL);
         for (size_t r = 0; r < lROW; ++r) {
             for (size_t c = 0; c < rCUL; ++c) {
                 for (size_t k = 0; k < lCUL; ++k) {
-                    newMatr.at(r, c) += lhs.read(r, k) * rhs.read(k, c);
+                    result.at(r, c) += lhs.read(r, k) * rhs.read(k, c);
                 }
             }
         }
-        result = std::move(newMatr);
     }
 
     // 行列スカラー倍
