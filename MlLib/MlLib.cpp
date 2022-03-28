@@ -107,12 +107,16 @@ namespace myk::lib {
 
     // 行と列を指定してその要素の値を取得（変更不可）
     inline double Matrix::read(UINT row, UINT cul) const noexcept(false) {
+#if _DEBUG
         try {
             return _matrix.at(row * CUL + cul);
         } catch (std::out_of_range& e) {
             std::cerr << "Matrix::read で例外が発生しました:" << e.what() << std::endl;
             return 0;
         }
+#else
+        return _matrix.at(row * CUL + cul);
+#endif _DEBUG
     }
 
     // Matrixの内容を出力する
@@ -197,21 +201,21 @@ namespace myk::lib {
     // 行列積
     inline Matrix multiply(const Matrix& lhs, const Matrix& rhs) noexcept(false) {
         using namespace std::literals::string_literals;
-        int lCUL = static_cast<UINT>(lhs.CUL);
-        int rROW = static_cast<UINT>(rhs.ROW);
+        int lCUL = static_cast<int>(lhs.CUL);
+        int rROW = static_cast<int>(rhs.ROW);
         if (lCUL != rROW) {
             throw "計算できない行列です。\n左辺の行と右辺の列が一致している必要があります。\n"s
                 + "左辺 Matrix row = "s + std::to_string(lhs.ROW) + "cul = "s + std::to_string(lCUL)
                 + "右辺 Matrix row = "s + std::to_string(rROW) + "cul = "s + std::to_string(rhs.CUL);
         }
-        int rCUL = static_cast<UINT>(rhs.CUL);
-        int lROW = static_cast<UINT>(lhs.ROW);
+        int rCUL = static_cast<int>(rhs.CUL);
+        int lROW = static_cast<int>(lhs.ROW);
         Matrix newMatr(lROW, rCUL);
-#pragma omp parallel for
+//#pragma omp parallel for
         for (int r = 0; r < lROW; ++r) {
             for (int c = 0; c < rCUL; ++c) {
                 for (int k = 0; k < lCUL; ++k) {
-                    newMatr.at(static_cast<UINT>(r), static_cast<UINT>(c)) += lhs.read(static_cast<UINT>(r), static_cast<UINT>(k)) * rhs.read(k, c);
+                    newMatr.at(r, c) += lhs.read(r, k) * rhs.read(k, c);
                 }
             }
         }
@@ -248,12 +252,17 @@ namespace myk::lib {
         Matrix newMatrix(lROW, lCUL);
         for (size_t i = 0; i < lROW; ++i) {
             for (size_t j = 0; j < lCUL; ++j) {
-                //try {
+#if _DEBUG
+                try {
+                  newMatrix.at(i, j)
+                      = lhs.read(i, j) * rhs;
+                } catch (std::out_of_range& e) {
+                    std::cout << "multiply(const MAtrix&, double) " << e.what() << std::endl;
+                }
+#else
                     newMatrix.at(i, j)
                         = lhs.read(i, j) * rhs;
-                //} catch (std::out_of_range& e) {
-                //    std::cout << "multiply(const MAtrix&, double) " << e.what() << std::endl;
-                //}
+#endif
             }
         }
         return newMatrix;
@@ -305,6 +314,7 @@ namespace myk::lib {
         for (size_t i = 0; i < lhs.ROW; ++i) {
             for (size_t j = 0; j < lhs.CUL; ++j) {
                 //全要素チェック
+#if _DEBUG
                 try {
                     if (lhs.read(i, j) != rhs.read(i, j)) return false;
                 } catch (std::out_of_range& e) {
@@ -313,6 +323,9 @@ namespace myk::lib {
                         e.what() << std::endl;
                     //return false;
                 }
+#else
+                    if (lhs.read(i, j) != rhs.read(i, j)) return false;
+#endif
             }
         }
         return true;
@@ -628,6 +641,8 @@ myk::ID nativeMatrixMultiply(myk::ID lhs, myk::ID rhs) {
     myk::ManageMTXObj& mmo = myk::ManageMTXObj::getInstance();
     myk::UPtrMtx& upmL = mmo.getUPtrMtx(lhs);
     myk::UPtrMtx& upmR = mmo.getUPtrMtx(rhs);
+    myk::UPtrMtx mtx = upmL * upmR;
+#if _DEBUG
     try {
         myk::UPtrMtx mtx = upmL * upmR;
         return mmo.registMTXObj(std::move(mtx));
@@ -640,6 +655,10 @@ myk::ID nativeMatrixMultiply(myk::ID lhs, myk::ID rhs) {
             << e.what() << std::endl;
         return 0;
     }
+#else
+    return mmo.registMTXObj(std::move(mtx));
+#endif
+
 }
 
 //スカラー値を加算
