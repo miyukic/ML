@@ -547,7 +547,7 @@ void dbgMain(void) {
     std::mt19937 engine{ seed_gen() };
     std::uniform_real_distribution<> dist{0, 50};
 
-    const int32_t size = 500;
+    constexpr int32_t size = 450;
     std::vector<std::vector<double>> array;
     for (int32_t i = 0; i < size; ++i) {
         array.emplace_back(std::vector<double>());
@@ -562,7 +562,8 @@ void dbgMain(void) {
 
     chrono::system_clock::time_point start, end;
     double allTime = 0;
-    auto times = 5;
+    auto times = 15;
+    double firstTime = 0;
     for (auto count = 0; count < times; ++count) {
         cmtx.multiply(cmtx);
         start = chrono::system_clock::now();
@@ -571,11 +572,14 @@ void dbgMain(void) {
         }
         end = chrono::system_clock::now();
         auto t = static_cast<double>(chrono::duration_cast<chrono::microseconds>(end - start).count() / 1000.0);
+        if (count == 0) firstTime = t;
         allTime += t;
         std::cout << count << "回目 秒数: " << t << "ms" << std::endl;
     }
     double time = allTime / times;
     std::cout << " Matrix:" << time << " ms" << std::endl;
+    double timeExcepted1 = (allTime - firstTime) / (times - 1);
+    std::cout << " Matrix(0回目を除いた平均):" << timeExcepted1 << " ms" << std::endl;
 }
 #pragma endregion //テスト関数
 
