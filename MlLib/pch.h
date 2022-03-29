@@ -8,6 +8,8 @@
 #define PCH_H
 
 // プリコンパイルするヘッダーをここに追加します
+#ifdef _WIN32
 #include "framework.h"
+#endif
 
 #endif //PCH_H
