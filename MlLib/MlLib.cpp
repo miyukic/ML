@@ -67,31 +67,31 @@ namespace myk::lib {
 
     // 二次元ジャグ配列vectorをムーブして初期化するコンストラクタ
     Matrix::Matrix(const std::vector<std::vector<double>>&& matrix) :
-         ROW{ static_cast<UINT>(matrix.size()) }, CUL{ static_cast<UINT>(matrix.at(0).size()) },
-        _matrix(matrix.at(0).size()* matrix.size()) {
+         ROW{ static_cast<UINT>(matrix.size()) }, CUL{ static_cast<UINT>(matrix[0].size()) },
+        _matrix(matrix[0].size()* matrix.size()) {
         to1DimensionalArray(matrix);
     }
 
 
     // 二次元vectorを参照して初期化するコンストラクタ
     Matrix::Matrix(const std::vector<std::vector<double>>& matrix) :
-        ROW{static_cast<UINT>(matrix.size())}, CUL{static_cast<UINT>(matrix.at(0).size())},
-        _matrix(matrix.at(0).size()* matrix.size()) {
+        ROW{static_cast<UINT>(matrix.size())}, CUL{static_cast<UINT>(matrix[0].size())},
+        _matrix(matrix[0].size()* matrix.size()) {
         to1DimensionalArray(matrix);
     }
 
     // 二次元vectorをムーブして初期化するコンストラクタ
     Matrix::Matrix(const std::vector<std::vector<double>>&& matrix, bool unCheckJaddedArray) :
-        ROW{ static_cast<UINT>(matrix.size())}, CUL{static_cast<UINT>(matrix.at(0).size())}, 
-        _matrix(matrix.at(0).size()* matrix.size()) {
+        ROW{ static_cast<UINT>(matrix.size())}, CUL{static_cast<UINT>(matrix[0].size())}, 
+        _matrix(matrix[0].size()* matrix.size()) {
         to1DimensionalArray(matrix);
         //if (!unCheckJaddedArray) checkMatrixCULSize();
     }
 
     // 二次元vectorを参照して初期化するコンストラクタ
     Matrix::Matrix(const std::vector<std::vector<double>>& matrix, bool unCheckJaddedArray) :
-        ROW{ static_cast<UINT>(matrix.size()) }, CUL{ static_cast<UINT>(matrix.at(0).size()) }, 
-        _matrix(matrix.at(0).size()* matrix.size()) {
+        ROW{ static_cast<UINT>(matrix.size()) }, CUL{ static_cast<UINT>(matrix[0].size()) }, 
+        _matrix(matrix[0].size()* matrix.size()) {
         to1DimensionalArray(matrix);
         //if (!unCheckJaddedArray) checkMatrixCULSize();
     }

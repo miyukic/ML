@@ -149,9 +149,9 @@ namespace myk {
 
             void to1DimensionalArray(const std::vector<std::vector<double>>& matrix) {
                 for (auto i = 0; i < ROW; ++i) {
-                    auto temp = matrix.at(i);
+                    auto temp = matrix[i];
                     for (auto j = 0; j < CUL; ++j) {
-                        _matrix.at(i * CUL + j) = temp.at(j);
+                        _matrix[i * CUL + j] = temp[j];
                     }
                 }
             }
