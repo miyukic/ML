@@ -98,7 +98,7 @@ namespace myk::lib {
 
     // ムーブコンストラクタ
     Matrix::Matrix(Matrix&& from) noexcept :
-        ROW{ from.ROW }, CUL{ from.CUL }, _matrix(from._matrix) { }
+        ROW{ from.ROW }, CUL{ from.CUL }, _matrix(std::move(from._matrix)) { }
 
     // 行と列を指定してその要素の参照を取得（変更可）
     inline double& Matrix::at(UINT row, UINT cul) noexcept(false) {
