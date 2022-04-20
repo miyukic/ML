@@ -591,7 +591,8 @@ namespace Myk {
             _output = Affine(x, w, bias);
         }
     }
-    class Program {
+
+    public class Program {
 #region data
         const double E = 2.71828182846;
         static readonly double[] 教師データ = {
@@ -663,9 +664,9 @@ namespace Myk {
             return x * w + bias;
         }
 
-        public static CMatrix CAffine(in CMatrix x, in CMatrix w, in double bias) {
-            return CMatrix.Multiply(x, w) + bias;
-        }
+        //public static CMatrix CAffine(in CMatrix x, in CMatrix w, in double bias) {
+        //    return CMatrix.Multiply(x, w) + bias;
+        //}
 
         const double d = 1E-5D;
         const double dd = 1E-5D * 2;

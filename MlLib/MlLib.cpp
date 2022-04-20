@@ -14,6 +14,7 @@
 #include <chrono>
 #include <limits>
 
+
 #ifndef DBG
 #if _DEBUG
 #	define DBG(...) std::cout << #__VA_ARGS__ << " = " << [&](){ return __VA_ARGS__; }() << std::endl;
@@ -153,7 +154,7 @@ namespace myk::lib {
     }
 
     // 使われない
-    bool Matrix::checkMatrixCULSize() noexcept(false) {
+    constexpr bool Matrix::checkMatrixCULSize() noexcept(false) {
         for (size_t i = 0; i < ROW; ++i) {
             if (CUL != CUL) {
                 throw "Matrixの列サイズが一致していません。";
@@ -163,7 +164,7 @@ namespace myk::lib {
         return true;
     }
 
-    Matrix& Matrix::operator =(Matrix&& other) {
+    Matrix& Matrix::operator =(Matrix&& other) noexcept {
         if (this != &other) {
             CUL = other.CUL;
             ROW = other.ROW;
@@ -307,7 +308,7 @@ namespace myk::lib {
         return add(lhs, rhs);
     }
 
-    bool operator==(const Matrix& lhs, const Matrix& rhs) {
+    constexpr bool operator==(const Matrix& lhs, const Matrix& rhs) {
         //shapeチェック
         if (lhs.CUL != rhs.CUL || lhs.ROW != rhs.ROW) return false;
         for (size_t i = 0; i < lhs.ROW; ++i) {

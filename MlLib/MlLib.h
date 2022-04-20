@@ -134,7 +134,7 @@ namespace myk {
             /// <summary>
             /// ムーブ代入演算子
             /// </summary>
-            Matrix& operator=(Matrix&&);
+            Matrix& operator=(Matrix&&) noexcept;
 
             /// <summary>
             /// 行列積（副作用あり）
@@ -156,7 +156,7 @@ namespace myk {
                 }
             }
 
-            bool checkMatrixCULSize() noexcept(false);
+            constexpr bool checkMatrixCULSize() noexcept(false);
         };
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace myk {
 
         MLLIB_API Matrix operator*(const Matrix& lhs, const Matrix& rhs) noexcept(false);
 
-        MLLIB_API bool operator==(const Matrix& lhs, const Matrix& rhs) noexcept(false);
+        MLLIB_API constexpr bool operator==(const Matrix& lhs, const Matrix& rhs) noexcept(false);
 
         /// <summary>
         /// operator==が定義されているすべての型にoperator!=が自動で定義されます。

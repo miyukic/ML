@@ -23,7 +23,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\MlLib\MlLib.vcxproj" />
-    <ProjectReference Include="..\SG\SG.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     </ItemGroup>
 
 </Project>
