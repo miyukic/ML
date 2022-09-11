@@ -455,6 +455,9 @@ void dbgMain(void) {
     using namespace myk;
     using namespace myk::lib;
     using namespace std;
+#ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);
+#endif
     std::cout << "コンパイル時間: " << __TIME__ << std::endl;
     std::random_device seed_gen;
     std::mt19937 engine{ seed_gen() };

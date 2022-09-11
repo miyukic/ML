@@ -1,13 +1,13 @@
-#pragma once
+ï»¿#pragma once
 #include "MlLib.h"
 
 namespace myk {
     using namespace lib;
     /// <summary>
-    /// MatrixƒIƒuƒWƒFƒNƒg‚ğID‚Æ•R‚Ã‚¯‚ÄŠÇ—‚·‚éƒNƒ‰ƒXB
-    /// MatrinxƒIƒuƒWƒFƒNƒg‚ÉƒAƒNƒZƒX‚·‚é‚Æ‚«‚ÍID‚ª•K—vB(ƒfƒŠ[ƒgAæ“¾‚È‚Çj
-    /// MatrixƒIƒuƒWƒFƒNƒg‚Í UPtrMtx ‚Æ‚µ‚ÄŠÇ—‚µ‚Ä‚¢‚Ü‚·BMatrix‚Ìunique_ptr‚Å‚·B
-    /// Singleton ƒNƒ‰ƒX ‚È‚Ì‚Å ManageMTXObj& getIncetance() ‚Åæ“¾B
+    /// Matrixã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’IDã¨ç´ã¥ã‘ã¦ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
+    /// Matrinxã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã‚¢ã‚¯ã‚»ã‚¹ã™ã‚‹ã¨ãã¯IDãŒå¿…è¦ã€‚(ãƒ‡ãƒªãƒ¼ãƒˆã€å–å¾—ãªã©ï¼‰
+    /// Matrixã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¯ UPtrMtx ã¨ã—ã¦ç®¡ç†ã—ã¦ã„ã¾ã™ã€‚Matrixã®unique_ptrã§ã™ã€‚
+    /// Singleton ã‚¯ãƒ©ã‚¹ ãªã®ã§ ManageMTXObj& getIncetance() ã§å–å¾—ã€‚
     /// </summary>
     class ManageMTXObj {
         std::vector<ID> _deletedNum;
@@ -17,37 +17,37 @@ namespace myk {
 
     public:
         /// <summary>
-        /// ManageMTXObj ‚ğ•Ô‚·B
+        /// ManageMTXObj ã‚’è¿”ã™ã€‚
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
         static ManageMTXObj& getInstance();
 
         /// <summary>
-        /// MatrixƒIƒuƒWƒFƒNƒg‚ğ“o˜^
-        /// –ß‚è’l‚ÍŠÇ——p‚ÌID
+        /// Matrixã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç™»éŒ²
+        /// æˆ»ã‚Šå€¤ã¯ç®¡ç†ç”¨ã®ID
         /// </summary>
         /// <param name="_matrix"></param>
         /// <returns></returns>
         ID registMTXObj(UPtrMtx&& _matrix);
 
         /// <summary>
-        /// ID‚ÅMatrixƒIƒuƒWƒFƒNƒg‚ğ–³Œø‚É‚·‚éB
+        /// IDã§Matrixã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç„¡åŠ¹ã«ã™ã‚‹ã€‚
         /// </summary>
         /// <param name=""></param>
         /// <returns></returns>
         void invalidMTXObj(ID id) noexcept(true);
 
         /// <summary>
-        /// g‚Á‚Ä‚¢‚È‚¢•s—v‚Ès—ñ‚ğíœ‚·‚éB
-        /// ‰ğ•ú‚É¬Œ÷‚µ‚½MatrixƒIƒuƒWƒFƒNƒg‚ÌŒÂ”‚ğ•Ô‚·B
+        /// ä½¿ã£ã¦ã„ãªã„ä¸è¦ãªè¡Œåˆ—ã‚’å‰Šé™¤ã™ã‚‹ã€‚
+        /// è§£æ”¾ã«æˆåŠŸã—ãŸMatrixã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å€‹æ•°ã‚’è¿”ã™ã€‚
         /// </summary>
         UINT memoryRelease(void);
 
         /// <summary>
-        /// ID‚ÅMatrixƒIƒuƒWƒFƒNƒg‚ÌQÆ‚ğæ“¾
-        /// ƒIƒuƒWƒFƒNƒg‚ÌQÆ‚ğæ“¾Œã‚ÉregistMTXObj(UPtrMtx)ƒƒ\ƒbƒh“™‚Å
-        /// MatrixƒIƒuƒWƒFƒNƒg‚ğ’Ç‰Á‚·‚é‚Æƒƒ‚ƒŠ‚ÌÄ”z’u‚É‚æ‚èQÆ‚ª–³Œø‚É‚È‚é‰Â”\«‚É’ˆÓB
+        /// IDã§Matrixã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å‚ç…§ã‚’å–å¾—
+        /// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å‚ç…§ã‚’å–å¾—å¾Œã«registMTXObj(UPtrMtx)ãƒ¡ã‚½ãƒƒãƒ‰ç­‰ã§
+        /// Matrixã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’è¿½åŠ ã™ã‚‹ã¨ãƒ¡ãƒ¢ãƒªã®å†é…ç½®ã«ã‚ˆã‚Šå‚ç…§ãŒç„¡åŠ¹ã«ãªã‚‹å¯èƒ½æ€§ã«æ³¨æ„ã€‚
         /// <param name="id"></param>
         /// </summary>
         UPtrMtx& getUPtrMtx(ID id);
@@ -57,7 +57,7 @@ namespace myk {
         ManageMTXObj(ManageMTXObj&&) = delete;
         ManageMTXObj& operator=(ManageMTXObj&&) = delete;
     private:
-        //ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+        //ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
         ManageMTXObj();
         ~ManageMTXObj() = default;
     };

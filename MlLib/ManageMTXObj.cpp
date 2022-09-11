@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "ManageMTXObj.h"
 
 namespace myk {
@@ -8,7 +8,7 @@ namespace myk {
     ManageMTXObj::ManageMTXObj() { _mtxList.reserve(_MATRIX_QUANTITY); }
 
     /// <summary>
-    /// ManageMTXObj ‚ğ•Ô‚·B
+    /// ManageMTXObj ã‚’è¿”ã™ã€‚
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
@@ -17,8 +17,8 @@ namespace myk {
     }
 
     /// <summary>
-    /// MatrixƒIƒuƒWƒFƒNƒg‚ğ“o˜^
-    /// –ß‚è’l‚ÍŠÇ——p‚ÌID
+    /// Matrixã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç™»éŒ²
+    /// æˆ»ã‚Šå€¤ã¯ç®¡ç†ç”¨ã®ID
     /// </summary>
     /// <param name="_matrix"></param>
     /// <returns></returns>
@@ -35,7 +35,7 @@ namespace myk {
     }
 
     /// <summary>
-    /// ID‚ÅMatrixƒIƒuƒWƒFƒNƒg‚ğ–³Œø‚É‚·‚éB
+    /// IDã§Matrixã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç„¡åŠ¹ã«ã™ã‚‹ã€‚
     /// </summary>
     /// <param name=""></param>
     /// <returns></returns>
@@ -46,8 +46,8 @@ namespace myk {
     }
 
     /// <summary>
-    /// g‚Á‚Ä‚¢‚È‚¢•s—v‚Ès—ñ‚ğíœ‚·‚éB
-    /// ‰ğ•ú‚É¬Œ÷‚µ‚½MatrixƒIƒuƒWƒFƒNƒg‚ÌŒÂ”‚ğ•Ô‚·B
+    /// ä½¿ã£ã¦ã„ãªã„ä¸è¦ãªè¡Œåˆ—ã‚’å‰Šé™¤ã™ã‚‹ã€‚
+    /// è§£æ”¾ã«æˆåŠŸã—ãŸMatrixã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å€‹æ•°ã‚’è¿”ã™ã€‚
     /// </summary>
     UINT ManageMTXObj::memoryRelease() {
         UINT c = 0;
@@ -63,9 +63,9 @@ namespace myk {
     }
 
     /// <summary>
-    /// ID‚ÅMatrixƒIƒuƒWƒFƒNƒg‚ÌQÆ‚ğæ“¾
-    /// ƒIƒuƒWƒFƒNƒg‚ÌQÆ‚ğæ“¾Œã‚ÉregistMTXObj(UPtrMtx)ƒƒ\ƒbƒh“™‚Å
-    /// MatrixƒIƒuƒWƒFƒNƒg‚ğ’Ç‰Á‚·‚é‚Æƒƒ‚ƒŠ‚ÌÄ”z’u‚É‚æ‚èQÆ‚ª–³Œø‚É‚È‚é‰Â”\«‚É’ˆÓB
+    /// IDã§Matrixã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å‚ç…§ã‚’å–å¾—
+    /// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å‚ç…§ã‚’å–å¾—å¾Œã«registMTXObj(UPtrMtx)ãƒ¡ã‚½ãƒƒãƒ‰ç­‰ã§
+    /// Matrixã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’è¿½åŠ ã™ã‚‹ã¨ãƒ¡ãƒ¢ãƒªã®å†é…ç½®ã«ã‚ˆã‚Šå‚ç…§ãŒç„¡åŠ¹ã«ãªã‚‹å¯èƒ½æ€§ã«æ³¨æ„ã€‚
     /// <param name="id"></param>
     /// </summary>
     UPtrMtx& ManageMTXObj::getUPtrMtx(ID id) {
