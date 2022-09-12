@@ -8,3 +8,5 @@ ML/ML/enc_temp_folder/338f6dc957a362d37ca8e49541f467/MlLib.cpp
 *.pyd
 /.vs/ML/v17
 /.vs
+.vs/slnx.sqlite
+.vs/VSWorkspaceState.json

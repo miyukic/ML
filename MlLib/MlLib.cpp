@@ -14,6 +14,8 @@
 #include <chrono>
 #include <limits>
 
+#include "ManageMTXObj.h"
+
 
 #ifndef DBG
 #if _DEBUG
@@ -336,96 +338,6 @@ namespace myk::lib {
 } //namespace end myk::lib
 namespace myk {
     using namespace lib;
-
-    /// <summary>
-    /// MatrixオブジェクトをIDと紐づけて管理するクラス。
-    /// MatrinxオブジェクトにアクセスするときはIDが必要。(デリート、取得など）
-    /// Matrixオブジェクトは UPtrMtx として管理しています。Matrixのunique_ptrです。
-    /// Singleton クラス なので ManageMTXObj& getIncetance() で取得。
-    /// </summary>
-    class ManageMTXObj {
-        std::vector<ID> _deletedNum;
-        std::vector<UPtrMtx> _mtxList;
-        static constexpr uint16_t _MATRIX_QUANTITY = 0x0080;
-        static ManageMTXObj _instance;
-
-    public:
-        /// <summary>
-        /// ManageMTXObj を返す。
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        static ManageMTXObj& getInstance() {
-            return _instance;
-        }
-
-        /// <summary>
-        /// Matrixオブジェクトを登録
-        /// 戻り値は管理用のID
-        /// </summary>
-        /// <param name="_matrix"></param>
-        /// <returns></returns>
-        ID registMTXObj(UPtrMtx&& _matrix) {
-            if (_deletedNum.size() > 0) {
-                ID id = static_cast<ID>(_deletedNum.size());
-                _mtxList.at(id) = std::move(_matrix);
-                _deletedNum.pop_back();
-                return id;
-            }
-            ID id = static_cast<ID>(_mtxList.size());
-            _mtxList.emplace_back(std::move(_matrix));
-            return id;
-        }
-
-        /// <summary>
-        /// IDでMatrixオブジェクトを無効にする。
-        /// </summary>
-        /// <param name=""></param>
-        /// <returns></returns>
-        void invalidMTXObj(ID id) noexcept(true) {
-            auto i = std::find(_deletedNum.begin(), _deletedNum.end(), id);
-            if (i == _deletedNum.end())
-                _deletedNum.emplace_back(id);
-        }
-
-        /// <summary>
-        /// 使っていない不要な行列を削除する。
-        /// 解放に成功したMatrixオブジェクトの個数を返す。
-        /// </summary>
-        UINT memoryRelease() {
-            UINT c = 0;
-            for (ID id : _deletedNum) {
-                if (id <= _mtxList.size()) {
-                    _mtxList.at(id).release();
-                    ++c;
-                } else {
-                    continue;
-                }
-            }
-            return c;
-        }
-
-        /// <summary>
-        /// IDでMatrixオブジェクトの参照を取得
-        /// オブジェクトの参照を取得後にregistMTXObj(UPtrMtx)メソッド等で
-        /// Matrixオブジェクトを追加するとメモリの再配置により参照が無効になる可能性に注意。
-        /// <param name="id"></param>
-        /// </summary>
-        UPtrMtx& getUPtrMtx(ID id) {
-            return _mtxList.at(id);
-        }
-
-        ManageMTXObj(const ManageMTXObj&) = delete;
-        ManageMTXObj& operator=(const ManageMTXObj&) = delete;
-        ManageMTXObj(ManageMTXObj&&) = delete;
-        ManageMTXObj& operator=(ManageMTXObj&&) = delete;
-    private:
-        // コンストラクタ
-        ManageMTXObj() { _mtxList.reserve(_MATRIX_QUANTITY); }
-        ~ManageMTXObj() = default;
-    };
-    ManageMTXObj ManageMTXObj::_instance;
-
 #pragma region UPtrMtx関係のグローバル関数
     // 行列積
     myk::UPtrMtx multiply(const UPtrMtx& lhs, const UPtrMtx& rhs) noexcept(false) {
@@ -543,6 +455,9 @@ void dbgMain(void) {
     using namespace myk;
     using namespace myk::lib;
     using namespace std;
+#ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);
+#endif
     std::cout << "コンパイル時間: " << __TIME__ << std::endl;
     std::random_device seed_gen;
     std::mt19937 engine{ seed_gen() };
